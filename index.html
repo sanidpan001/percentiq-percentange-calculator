@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PercentIQ — Free Percentage Calculator | Discount, GST, Tip &amp; % Change</title>
+<meta name="description" content="PercentIQ is a free percentage calculator with 4 modes: X% of Y, what % is X of Y, percentage change and percentage points. One-tap discount, GST-reverse and tip presets, instant answers with step-by-step formulas. No signup.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234F46E5'/%3E%3Ctext x='32' y='44' font-size='34' font-family='Arial Black,sans-serif' font-weight='900' fill='%23F59E0B' text-anchor='middle'%3E%25%3C/text%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root { --indigo:#4F46E5; --amber:#F59E0B; }
+  body { background:#FDFBF7; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  .big-type { font-variant-numeric: tabular-nums; letter-spacing:-0.03em; }
+  .mode-tab[aria-selected="true"] { background:#4F46E5; color:#fff; box-shadow:0 8px 20px -8px rgba(79,70,229,.55); }
+  .mode-tab[aria-selected="false"] { background:#fff; color:#312e81; border:1.5px solid #E5E3FA; }
+  input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+  input[type=number] { -moz-appearance:textfield; appearance:textfield; }
+  .field:focus { outline:3px solid rgba(245,158,11,.45); border-color:#F59E0B; }
+  .preset-btn:active { transform:scale(.96); }
+  .fade-in { animation: fadeIn .25s ease-in; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px);} to { opacity:1; transform:none;} }
+  .stripe { background-image: repeating-linear-gradient(-45deg, #4F46E5 0 14px, #4338CA 14px 28px); }
+  .hist-item:hover { background:#EEF0FF; }
+  @media print { .no-print { display:none !important; } }
+</style>
+</head>
+<body class="text-slate-800" id="top">
+
+<!-- Sticky header -->
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-indigo-100">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 h-16 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2.5">
+      <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#4F46E5] text-[#F59E0B] font-black text-2xl shadow-md">%</span>
+      <span class="text-2xl font-extrabold tracking-tight text-[#4F46E5]">Percent<span class="text-[#F59E0B]">IQ</span></span>
+    </a>
+    <nav class="text-sm font-semibold">
+      <a href="#top" class="px-3 py-2 rounded-lg text-indigo-900 hover:bg-indigo-50">Home</a>
+      <a href="https://fixoraa.tech" class="px-3 py-2 rounded-lg text-indigo-900 hover:bg-indigo-50">More Tools</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="no-print bg-white border-b border-indigo-100">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div>
+      <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-slate-900">Percentage Calculator <span class="text-[#4F46E5]">that shows its work</span></h1>
+      <p class="mt-2 text-slate-600 max-w-xl">Four calculation modes, one-tap presets for discounts, GST and tips, and every answer with the exact formula — free, instant, no signup.</p>
+    </div>
+    <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-amber-800">
+      <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+      Unlimited Free Usage
+    </span>
+  </div>
+</section>
+
+<!-- TOP AD (verbatim) -->
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TOOL: split-screen calculator ============ -->
+<main class="no-print mx-auto max-w-6xl px-4 sm:px-6 py-8">
+  <div class="grid lg:grid-cols-2 gap-6 items-stretch">
+
+    <!-- LEFT: controls -->
+    <section class="bg-white rounded-3xl border-2 border-indigo-100 shadow-[0_20px_50px_-25px_rgba(79,70,229,.35)] p-5 sm:p-7" aria-label="Calculator controls">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-extrabold text-slate-900">Pick a mode</h2>
+        <span class="text-[11px] font-bold uppercase tracking-widest text-[#F59E0B]">live answers</span>
+      </div>
+      <div class="grid grid-cols-2 gap-2 mb-6" role="tablist" aria-label="Calculation modes">
+        <button class="mode-tab rounded-2xl px-3 py-3 text-sm font-bold transition" role="tab" aria-selected="true" data-mode="of">X% of Y</button>
+        <button class="mode-tab rounded-2xl px-3 py-3 text-sm font-bold transition" role="tab" aria-selected="false" data-mode="what">X is what % of Y</button>
+        <button class="mode-tab rounded-2xl px-3 py-3 text-sm font-bold transition" role="tab" aria-selected="false" data-mode="change">% change</button>
+        <button class="mode-tab rounded-2xl px-3 py-3 text-sm font-bold transition" role="tab" aria-selected="false" data-mode="points">Percentage points</button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label id="label-a" for="input-a" class="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1.5">Percentage (X)</label>
+          <input id="input-a" type="number" inputmode="decimal" placeholder="e.g. 20" class="field big-type w-full text-3xl font-extrabold text-slate-900 bg-[#FDFBF7] border-2 border-indigo-100 rounded-2xl px-4 py-3">
+        </div>
+        <div>
+          <label id="label-b" for="input-b" class="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1.5">Number (Y)</label>
+          <input id="input-b" type="number" inputmode="decimal" placeholder="e.g. 500" class="field big-type w-full text-3xl font-extrabold text-slate-900 bg-[#FDFBF7] border-2 border-indigo-100 rounded-2xl px-4 py-3">
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <p class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Quick presets</p>
+        <div class="flex flex-wrap gap-2">
+          <button class="preset-btn rounded-full bg-indigo-50 border border-indigo-200 px-3.5 py-1.5 text-xs font-bold text-indigo-800 hover:bg-indigo-100" data-preset="discount-10">Discount 10%</button>
+          <button class="preset-btn rounded-full bg-indigo-50 border border-indigo-200 px-3.5 py-1.5 text-xs font-bold text-indigo-800 hover:bg-indigo-100" data-preset="discount-20">Discount 20%</button>
+          <button class="preset-btn rounded-full bg-amber-50 border border-amber-300 px-3.5 py-1.5 text-xs font-bold text-amber-800 hover:bg-amber-100" data-preset="gst-5">Remove GST 5%</button>
+          <button class="preset-btn rounded-full bg-amber-50 border border-amber-300 px-3.5 py-1.5 text-xs font-bold text-amber-800 hover:bg-amber-100" data-preset="gst-18">Remove GST 18%</button>
+          <button class="preset-btn rounded-full bg-emerald-50 border border-emerald-300 px-3.5 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-100" data-preset="tip-10">Tip 10%</button>
+          <button class="preset-btn rounded-full bg-emerald-50 border border-emerald-300 px-3.5 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-100" data-preset="tip-15">Tip 15%</button>
+        </div>
+        <p id="preset-note" class="mt-2 text-xs text-slate-500 h-4"></p>
+      </div>
+
+      <div class="mt-4 flex items-center gap-3">
+        <label for="decimals" class="text-xs font-bold uppercase tracking-widest text-slate-500">Decimals</label>
+        <input id="decimals" type="range" min="0" max="4" value="2" class="accent-[#4F46E5] w-32">
+        <span id="decimals-val" class="text-sm font-extrabold text-[#4F46E5] big-type">2</span>
+      </div>
+    </section>
+
+    <!-- RIGHT: big result -->
+    <section class="stripe rounded-3xl p-1 shadow-[0_20px_50px_-25px_rgba(79,70,229,.5)]" aria-label="Result">
+      <div class="bg-[#17122B] rounded-[calc(1.5rem-4px)] h-full p-6 sm:p-8 flex flex-col justify-between min-h-[420px]">
+        <div>
+          <p class="text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-300 mb-3" id="result-kicker">Answer</p>
+          <div id="result-main" class="big-type text-5xl sm:text-6xl font-black text-white break-words">—</div>
+          <div id="result-sub" class="mt-2 text-lg font-bold text-amber-300 big-type"></div>
+          <div id="result-formula" class="fade-in mt-5 rounded-2xl bg-white/5 border border-white/10 p-4">
+            <p class="text-[11px] font-bold uppercase tracking-widest text-indigo-300 mb-1.5">How it was calculated</p>
+            <p id="formula-text" class="text-base sm:text-lg font-semibold text-indigo-100 leading-relaxed">Type numbers on the left and the answer appears here, with every step shown.</p>
+          </div>
+          <p id="result-error" class="hidden mt-4 text-sm font-semibold text-red-300"></p>
+        </div>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <button id="copy-formula" class="rounded-xl bg-[#F59E0B] hover:bg-amber-400 text-slate-900 font-extrabold text-sm px-5 py-3 transition disabled:opacity-40 disabled:cursor-not-allowed" disabled>
+            Copy result as formula
+          </button>
+          <button id="swap-btn" class="rounded-xl border-2 border-white/20 hover:border-white/50 text-white font-bold text-sm px-5 py-3 transition">
+            Swap values
+          </button>
+        </div>
+        <p id="copy-toast" class="mt-3 text-xs font-bold text-emerald-300 h-4"></p>
+      </div>
+    </section>
+  </div>
+
+  <!-- History -->
+  <section class="mt-6 bg-white rounded-3xl border-2 border-indigo-100 p-5 sm:p-7" aria-label="Calculation history">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="text-lg font-extrabold text-slate-900">Recent calculations</h2>
+      <button id="clear-history" class="text-xs font-bold text-slate-400 hover:text-red-500 uppercase tracking-widest">Clear</button>
+    </div>
+    <ul id="history-list" class="space-y-1.5 text-sm"></ul>
+    <p id="history-empty" class="text-sm text-slate-400">Nothing yet — your last 10 calculations will appear here and are saved on this device only.</p>
+  </section>
+</main>
+
+<!-- BOTTOM AD (verbatim) -->
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="464498"></script>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== PercentIQ core logic — pure functions (mirrored in tests) ===== */
+function num(v){ const n = parseFloat(String(v).trim()); return Number.isFinite(n) ? n : null; }
+function pctOf(x, y){ return (x / 100) * y; }
+function whatPct(x, y){ if (y === 0) return null; return (x / y) * 100; }
+function pctChange(oldV, newV){ if (oldV === 0) return null; return ((newV - oldV) / Math.abs(oldV)) * 100; }
+function pctPoints(a, b){ const points = b - a; const relative = (a === 0) ? null : ((b - a) / Math.abs(a)) * 100; return { points, relative }; }
+function gstReverse(inclusive, rate){ const net = inclusive / (1 + rate / 100); return { net, tax: inclusive - net }; }
+function tipCalc(bill, pct){ const tip = bill * pct / 100; return { tip, total: bill + tip }; }
+function discountCalc(price, pct){ const off = price * pct / 100; return { off, final: price - off }; }
+function roundTo(n, d){ const f = Math.pow(10, d); return Math.round((n + Number.EPSILON) * f) / f; }
+function fmt(n, d){ if (!Number.isFinite(n)) return '—'; const r = roundTo(n, d); return r.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: d }); }
+
+const MODES = {
+  of:     { kicker:'Answer — X% of Y', la:'Percentage (X)', lb:'Number (Y)', pa:'e.g. 20', pb:'e.g. 500' },
+  what:   { kicker:'Answer — X is what % of Y', la:'Number (X)', lb:'Base number (Y)', pa:'e.g. 45', pb:'e.g. 200' },
+  change: { kicker:'Answer — % change from old to new', la:'Old value', lb:'New value', pa:'e.g. 120', pb:'e.g. 150' },
+  points: { kicker:'Answer — percentage points', la:'Rate A (%)', lb:'Rate B (%)', pa:'e.g. 4', pb:'e.g. 6' }
+};
+let mode = 'of';
+let lastResult = null; // {main, formula, hist}
+
+const $ = id => document.getElementById(id);
+const inputA = $('input-a'), inputB = $('input-b');
+
+function setMode(m){
+  mode = m;
+  document.querySelectorAll('.mode-tab').forEach(t => t.setAttribute('aria-selected', t.dataset.mode === m ? 'true' : 'false'));
+  $('label-a').textContent = MODES[m].la; $('label-b').textContent = MODES[m].lb;
+  inputA.placeholder = MODES[m].pa; inputB.placeholder = MODES[m].pb;
+  $('result-kicker').textContent = MODES[m].kicker;
+  calculate();
+}
+
+function setError(msg){
+  const e = $('result-error');
+  if (msg){ e.textContent = msg; e.classList.remove('hidden'); }
+  else { e.classList.add('hidden'); }
+}
+
+function formulaTextFor(a, b, res, d){
+  switch(mode){
+    case 'of':     return `${fmt(a,d)}% of ${fmt(b,d)} = (${fmt(a,d)} ÷ 100) × ${fmt(b,d)} = ${fmt(res,d)}`;
+    case 'what':   return `${fmt(a,d)} is what % of ${fmt(b,d)}? = (${fmt(a,d)} ÷ ${fmt(b,d)}) × 100 = ${fmt(res,d)}%`;
+    case 'change': {
+      const dir = res > 0 ? 'increase' : res < 0 ? 'decrease' : 'no change';
+      return `% change = ((${fmt(b,d)} − ${fmt(a,d)}) ÷ |${fmt(a,d)}|) × 100 = ${fmt(res,d)}% → ${Math.abs(res) < 1e-12 ? 'no change' : dir}`;
+    }
+    case 'points': return `Percentage points = ${fmt(b,d)} − ${fmt(a,d)} = ${fmt(res.points,d)} pp`;
+    default: return '';
+  }
+}
+
+function calculate(){
+  setError('');
+  const d = parseInt($('decimals').value, 10);
+  $('decimals-val').textContent = d;
+  const a = num(inputA.value), b = num(inputB.value);
+  const mainEl = $('result-main'), subEl = $('result-sub'), formEl = $('formula-text');
+  $('copy-formula').disabled = true; lastResult = null;
+
+  if (a === null || b === null){
+    mainEl.textContent = '—';
+    subEl.textContent = '';
+    formEl.textContent = 'Type numbers on the left and the answer appears here, with every step shown.';
+    return;
+  }
+
+  if (mode === 'of'){
+    const r = pctOf(a, b);
+    mainEl.textContent = fmt(r, d);
+    subEl.textContent = '';
+    formEl.textContent = formulaTextFor(a, b, r, d);
+    lastResult = { main: fmt(r,d), formula: formulaTextFor(a, b, r, d), hist: `${fmt(a,d)}% of ${fmt(b,d)} = ${fmt(r,d)}` };
+  } else if (mode === 'what'){
+    if (b === 0){ mainEl.textContent='—'; setError('The base number (Y) cannot be zero.'); return; }
+    const r = whatPct(a, b);
+    mainEl.textContent = fmt(r, d) + '%';
+    subEl.textContent = '';
+    formEl.textContent = formulaTextFor(a, b, r, d);
+    lastResult = { main: fmt(r,d)+'%', formula: formulaTextFor(a, b, r, d), hist: `${fmt(a,d)} is ${fmt(r,d)}% of ${fmt(b,d)}` };
+  } else if (mode === 'change'){
+    if (a === 0){ mainEl.textContent='—'; setError('The old value cannot be zero for % change.'); return; }
+    const r = pctChange(a, b);
+    const dir = r > 0 ? '▲ increase' : r < 0 ? '▼ decrease' : 'no change';
+    mainEl.textContent = (r > 0 ? '+' : '') + fmt(r, d) + '%';
+    mainEl.className = 'big-type text-5xl sm:text-6xl font-black break-words ' + (r > 0 ? 'text-emerald-300' : r < 0 ? 'text-red-300' : 'text-white');
+    subEl.textContent = dir;
+    formEl.textContent = formulaTextFor(a, b, r, d);
+    lastResult = { main: fmt(r,d)+'%', formula: formulaTextFor(a, b, r, d), hist: `${fmt(a,d)} → ${fmt(b,d)}: ${fmt(r,d)}%` };
+  } else if (mode === 'points'){
+    const r = pctPoints(a, b);
+    mainEl.textContent = (r.points > 0 ? '+' : '') + fmt(r.points, d) + ' pp';
+    subEl.textContent = r.relative === null
+      ? 'Relative change: undefined (rate A is 0)'
+      : 'Relative change: ' + (r.relative > 0 ? '+' : '') + fmt(r.relative, d) + '%';
+    formEl.textContent = formulaTextFor(a, b, r, d) + '  ·  relative change = (pp ÷ |A|) × 100.';
+    lastResult = { main: fmt(r.points,d)+' pp', formula: formulaTextFor(a, b, r, d), hist: `${fmt(a,d)}% → ${fmt(b,d)}%: ${fmt(r.points,d)} pp` };
+  }
+
+  if (lastResult){
+    $('copy-formula').disabled = false;
+    pushHistory(lastResult.hist);
+  }
+}
+
+/* Swap */
+$('swap-btn').addEventListener('click', () => {
+  const t = inputA.value; inputA.value = inputB.value; inputB.value = t; calculate();
+});
+
+/* Copy as formula */
+$('copy-formula').addEventListener('click', async () => {
+  if (!lastResult) return;
+  const text = 'PercentIQ: ' + lastResult.formula;
+  try {
+    await navigator.clipboard.writeText(text);
+    $('copy-toast').textContent = 'Copied to clipboard.';
+  } catch(e){
+    const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta);
+    ta.select(); try { document.execCommand('copy'); $('copy-toast').textContent = 'Copied to clipboard.'; }
+    catch(_){ $('copy-toast').textContent = 'Copy failed — select and copy manually.'; }
+    ta.remove();
+  }
+  setTimeout(() => $('copy-toast').textContent = '', 2500);
+});
+
+/* Presets — one tap fills a real-world scenario */
+document.querySelectorAll('[data-preset]').forEach(btn => btn.addEventListener('click', () => {
+  const p = btn.dataset.preset, note = $('preset-note');
+  if (p.startsWith('discount-')){
+    const pct = parseInt(p.split('-')[1], 10);
+    setMode('of'); inputA.value = pct; inputB.focus();
+    note.textContent = `Discount preset: ${pct}% — enter the price, or tap the result's formula to copy.`;
+  } else if (p.startsWith('gst-')){
+    const rate = parseInt(p.split('-')[1], 10);
+    setMode('of');
+    inputA.value = rate;
+    note.textContent = `GST preset: ${rate}% — enter the GST-inclusive price, then divide: net = price ÷ ${(1 + rate/100).toFixed(3)}`;
+  } else if (p.startsWith('tip-')){
+    const pct = parseInt(p.split('-')[1], 10);
+    setMode('of'); inputA.value = pct; inputB.focus();
+    note.textContent = `Tip preset: ${pct}% — enter the bill amount; add the result to the bill for the total.`;
+  }
+  calculate();
+}));
+
+/* Mode tabs */
+document.querySelectorAll('.mode-tab').forEach(t => t.addEventListener('click', () => setMode(t.dataset.mode)));
+
+/* Live input + decimals */
+inputA.addEventListener('input', calculate);
+inputB.addEventListener('input', calculate);
+$('decimals').addEventListener('input', calculate);
+
+/* History (localStorage) */
+const HKEY = 'percentiq-history-v1';
+function getHistory(){ try { return JSON.parse(localStorage.getItem(HKEY)) || []; } catch(e){ return []; } }
+function pushHistory(entry){
+  let h = getHistory().filter(x => x !== entry);
+  h.unshift(entry); h = h.slice(0, 10);
+  try { localStorage.setItem(HKEY, JSON.stringify(h)); } catch(e){}
+  renderHistory();
+}
+function renderHistory(){
+  const h = getHistory(), list = $('history-list');
+  list.innerHTML = '';
+  $('history-empty').style.display = h.length ? 'none' : 'block';
+  h.forEach(entry => {
+    const li = document.createElement('li');
+    li.className = 'hist-item rounded-xl border border-indigo-100 px-3 py-2 font-semibold text-slate-700 flex justify-between items-center gap-2';
+    li.innerHTML = '<span class="truncate"></span><button class="text-[11px] font-bold uppercase tracking-widest text-indigo-600 hover:text-indigo-800 shrink-0">Reuse</button>';
+    li.querySelector('span').textContent = entry;
+    li.querySelector('button').addEventListener('click', () => {
+      const m = entry.match(/^([\d.,\-+]+)%? of ([\d.,]+) =/);
+      if (m){ setMode('of'); inputA.value = m[1].replace(/,/g,''); inputB.value = m[2].replace(/,/g,''); calculate(); window.scrollTo({top:0, behavior:'smooth'}); }
+    });
+    list.appendChild(li);
+  });
+}
+$('clear-history').addEventListener('click', () => { try{ localStorage.removeItem(HKEY);}catch(e){} renderHistory(); });
+
+renderHistory();
+calculate();
+</script>
+
+<!-- ============ SEO content ============ -->
+<article class="mx-auto max-w-6xl px-4 sm:px-6 py-10 prose-article">
+  <div class="bg-white rounded-3xl border-2 border-indigo-100 p-6 sm:p-10">
+    <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 mb-6">The Complete Guide to Percentages: Formulas, Real-World Uses, and Mistakes to Avoid</h2>
+
+    <div class="text-slate-700 leading-relaxed space-y-5 text-[15px] sm:text-base">
+      <section>
+        <h3 class="text-xl font-extrabold text-[#4F46E5] mb-2">What a percentage actually means</h3>
+        <p>A percentage is simply a number expressed as a fraction of one hundred. The word comes from the Latin <em>per centum</em>, meaning "by the hundred." When we say 20%, we mean 20 out of every 100 — mathematically identical to the fraction 20/100 or the decimal 0.20. This single idea powers an enormous range of everyday decisions: the discount on a shirt, the tax on a bill, the interest on a loan, the marks on an exam, and the growth of an investment. Percentages are popular precisely because they let us compare things on a common scale. A score of 45 out of 60 and a score of 30 out of 40 look different, but as percentages — 75% and 75% — they are instantly comparable.</p>
+        <p>The universality of percentages is also why they are so easy to misuse. A percentage never means anything without its base — 20% of what? A shop claiming "50% off" is meaningless until you know the original price, and a news headline shouting "cases up 200%" hides whether the base was ten or ten thousand. Whenever you meet a percentage in the wild, the most useful question you can ask is: percent of what number? PercentIQ's four modes are built around exactly this discipline — every answer comes with its formula so the base is always visible.</p>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-extrabold text-[#4F46E5] mb-2">The four calculations you will actually use</h3>
+        <p><strong>1. X% of Y — finding a portion.</strong> This is the most common percentage question in daily life: what is 15% of a 1,200 bill? The formula is (X ÷ 100) × Y. In the example, (15 ÷ 100) × 1,200 = 180. Use it for tips, taxes, commissions, and any "how much is this share" question. A handy mental shortcut: 10% of anything is just the number with one digit removed (10% of 1,200 = 120), and 15% is 10% plus half of 10% (120 + 60 = 180).</p>
+        <p><strong>2. X is what percent of Y — finding the rate.</strong> This answers questions like "I scored 45 out of 60 — what is my percentage?" The formula is (X ÷ Y) × 100, so (45 ÷ 60) × 100 = 75%. Students, athletes, and salespeople use this constantly to turn raw counts into comparable rates. The most common error here is flipping the numbers — the part always goes on top, the whole on the bottom.</p>
+        <p><strong>3. Percentage change — measuring movement.</strong> How much did something grow or shrink? The formula is ((new − old) ÷ |old|) × 100. If your salary moved from 50,000 to 58,000, that is ((58,000 − 50,000) ÷ 50,000) × 100 = +16%. A positive answer is an increase, a negative answer is a decrease. This mode cannot work when the old value is zero, because division by zero is undefined — if you started from nothing, describe the change in absolute terms instead.</p>
+        <p><strong>4. Percentage points — comparing two rates.</strong> This is the mode most calculators leave out, and it is the one that prevents the most expensive misunderstandings. If an interest rate moves from 4% to 6%, the difference is 2 <em>percentage points</em> — but the relative change is +50%. Both statements are true; they answer different questions. Percentage points measure the absolute gap between two percentages; the relative change measures how big that gap is compared to where it started. PercentIQ shows you both side by side, so you never have to guess which one a headline means.</p>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-extrabold text-[#4F46E5] mb-2">Percentage points versus percent: why it matters</h3>
+        <p>Confusing percentage points with percent change is one of the most common quantitative mistakes in public discussion, and it has real consequences. A government raising a tax rate from 10% to 12% might describe it as "a 2% increase" — but the tax burden actually rose 20% in relative terms. A bank advertising a "1% higher return" could mean 1 percentage point (from 5% to 6%) or 1% relative (from 5% to 5.05%) — a twenty-fold difference in what you earn. Journalists, advertisers, and politicians exploit this ambiguity constantly.</p>
+        <p>The rule is simple: when both values are already percentages, the plain subtraction is "percentage points" (pp). The division by the starting value is the "relative percent change." Honest communication quotes both — "unemployment rose two points, from 4% to 6%, a 50% relative increase." With PercentIQ's dedicated percentage-points mode you get both numbers automatically, so you can read any claim and immediately see which version of the truth it is telling.</p>
+        <p>There is a related concept worth knowing: basis points. One basis point is one-hundredth of a percentage point (0.01%). Finance professionals use them to avoid exactly this ambiguity — a move from 4.00% to 4.50% is "up 50 basis points." You will see basis points in central-bank announcements and bond markets.</p>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-extrabold text-[#4F46E5] mb-2">Real-world scenarios: discounts, tips, and GST</h3>
+        <p><strong>Discounts.</strong> A shirt priced at 1,999 with 30% off: the discount is (30 ÷ 100) × 1,999 = 599.70, and you pay 1,399.30. Watch out for stacked discounts — "30% off, then an extra 20% off" is not 50% off. The second discount applies to the already-reduced price: 1,999 × 0.70 × 0.80 = 1,119.44, which is 44% off in total. Retailers count on shoppers adding the percentages instead of multiplying the factors.</p>
+        <p><strong>Tips.</strong> A 2,400 restaurant bill with a 10% tip adds 240, for a total of 2,640. In many countries 10–15% is the standard range; PercentIQ's tip presets fill 10% or 15% in one tap and show the tip amount so you can add it to the bill yourself. Splitting the bill is the same math in reverse: divide each person's share, then apply the tip percent to each portion.</p>
+        <p><strong>GST and reverse tax.</strong> In India, prices are usually quoted GST-inclusive, which makes the reverse calculation the one people actually need: a bill of 1,180 at 18% GST contains how much tax? You cannot just take 18% of 1,180 — that taxes the tax. The correct method is to divide by the growth factor: net price = 1,180 ÷ 1.18 = 1,000, so the GST component is 180. The general formula is tax = inclusive price − (inclusive price ÷ (1 + rate ÷ 100)). PercentIQ's GST presets pre-fill the 5% and 18% slab rates so you can reverse any GST-inclusive bill in seconds, and the formula panel shows the division step so you can verify it.</p>
+        <p><strong>Marks and grades.</strong> Exam percentages are the "X is what percent of Y" mode in its purest form: 432 marks out of 500 is (432 ÷ 500) × 100 = 86.4%. For weighted subjects, compute each subject's contribution separately and add them — never average the percentages unless every subject carries the same weight.</p>
+        <p><strong>Investments and salaries.</strong> Percentage change is the language of money over time: portfolio returns, salary hikes, inflation, and price movements. Remember that gains and losses are asymmetric — a 50% loss needs a 100% gain to recover, because the base shrank. A stock that falls from 100 to 50 (−50%) must rise from 50 back to 100 (+100%) to break even.</p>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-extrabold text-[#4F46E5] mb-2">Five mistakes almost everyone makes</h3>
+        <p><strong>1. Adding percentages that have different bases.</strong> A 20% rise followed by a 20% fall does not return to the start: 100 → 120 → 96. The second percentage applies to a bigger base, so the fall bites harder. <strong>2. Reversing a change by subtraction.</strong> To undo a 25% increase (×1.25), divide by 1.25 — do not subtract 25%. A 150 price after a 25% rise started at 120, not 112.50. <strong>3. Taking a percent of an inclusive price.</strong> As shown with GST, always divide by (1 + rate) for inclusive amounts. <strong>4. Averaging percentages directly.</strong> 50% on a 10-mark quiz and 90% on a 100-mark exam is not a 70% average — it is (5 + 90) ÷ 110 = 86.4% only if weighted equally by marks, otherwise compute per-unit contributions. <strong>5. Ignoring the base in headlines.</strong> "Doubled!" means +100% whether the base was 2 or 2 million — always ask what the base was before reacting.</p>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-extrabold text-[#4F46E5] mb-2">Formula cheat sheet</h3>
+        <ul class="list-disc pl-6 space-y-1.5">
+          <li>X% of Y = (X ÷ 100) × Y</li>
+          <li>X is what % of Y = (X ÷ Y) × 100</li>
+          <li>% change from old to new = ((new − old) ÷ |old|) × 100</li>
+          <li>Percentage points = new rate − old rate (both in %)</li>
+          <li>Relative change of a rate = (percentage points ÷ |old rate|) × 100</li>
+          <li>Price after discount = price × (1 − discount ÷ 100)</li>
+          <li>Original price before a rise = final ÷ (1 + rise ÷ 100)</li>
+          <li>Net of GST = inclusive ÷ (1 + GST rate ÷ 100)</li>
+          <li>Bill with tip = bill × (1 + tip ÷ 100)</li>
+        </ul>
+        <p class="mt-4">Every one of these is computed live by the calculator above, with the working shown beneath the answer and a one-click "copy result as formula" button for pasting into notes, spreadsheets, or messages. Your recent calculations are kept on your device only — nothing is uploaded anywhere.</p>
+      </section>
+    </div>
+
+    <!-- FAQs -->
+    <div class="mt-10">
+      <h3 class="text-xl font-extrabold text-slate-900 mb-4">Frequently asked questions</h3>
+      <div class="space-y-3">
+        <details class="rounded-2xl border border-indigo-100 bg-[#FDFBF7] p-4">
+          <summary class="font-bold text-slate-800 cursor-pointer">How do I calculate X% of Y?</summary>
+          <p class="mt-2 text-slate-600 text-[15px]">Multiply Y by X and divide by 100: (X ÷ 100) × Y. For example, 20% of 500 = (20 ÷ 100) × 500 = 100. Select the "X% of Y" mode above and the answer appears as you type, with the full formula shown.</p>
+        </details>
+        <details class="rounded-2xl border border-indigo-100 bg-[#FDFBF7] p-4">
+          <summary class="font-bold text-slate-800 cursor-pointer">What is the difference between percent change and percentage points?</summary>
+          <p class="mt-2 text-slate-600 text-[15px]">Percentage points are the simple subtraction of two rates (6% − 4% = 2 pp). Percent change is that gap relative to the starting value (2 ÷ 4 × 100 = +50%). Use the "Percentage points" mode above to see both numbers side by side for any two rates.</p>
+        </details>
+        <details class="rounded-2xl border border-indigo-100 bg-[#FDFBF7] p-4">
+          <summary class="font-bold text-slate-800 cursor-pointer">How do I remove GST from a GST-inclusive price?</summary>
+          <p class="mt-2 text-slate-600 text-[15px]">Divide the inclusive price by (1 + GST rate ÷ 100). A ₹1,180 bill at 18% GST has a net price of 1,180 ÷ 1.18 = ₹1,000, so the GST is ₹180. Tap the "Remove GST 18%" preset above to start, enter the bill amount, and follow the formula shown.</p>
+        </details>
+        <details class="rounded-2xl border border-indigo-100 bg-[#FDFBF7] p-4">
+          <summary class="font-bold text-slate-800 cursor-pointer">Why doesn't a 20% increase followed by a 20% decrease cancel out?</summary>
+          <p class="mt-2 text-slate-600 text-[15px]">Because the two percentages apply to different bases. Starting from 100: +20% gives 120, then −20% of 120 is 24, leaving 96. To fully reverse a loss of L%, you need a gain of L ÷ (1 − L) — a 50% loss needs a 100% gain to recover.</p>
+        </details>
+        <details class="rounded-2xl border border-indigo-100 bg-[#FDFBF7] p-4">
+          <summary class="font-bold text-slate-800 cursor-pointer">Can I copy the result with its formula?</summary>
+          <p class="mt-2 text-slate-600 text-[15px]">Yes. After any calculation, press "Copy result as formula" to copy text like "20% of 500 = (20 ÷ 100) × 500 = 100" to your clipboard — handy for homework, invoices, and messages.</p>
+        </details>
+        <details class="rounded-2xl border border-indigo-100 bg-[#FDFBF7] p-4">
+          <summary class="font-bold text-slate-800 cursor-pointer">Is PercentIQ free, and is my data private?</summary>
+          <p class="mt-2 text-slate-600 text-[15px]">Completely free with unlimited usage — no signup, no paywall, no watermark. All calculations run in your browser; nothing is sent to any server. Your recent-calculations history is stored only in your own browser's local storage and can be cleared any time.</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate X% of Y?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Multiply Y by X and divide by 100: (X ÷ 100) × Y. For example, 20% of 500 = (20 ÷ 100) × 500 = 100." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between percent change and percentage points?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Percentage points are the simple subtraction of two rates (6% − 4% = 2 pp). Percent change is that gap relative to the starting value (2 ÷ 4 × 100 = +50%)." }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I remove GST from a GST-inclusive price?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Divide the inclusive price by (1 + GST rate ÷ 100). A ₹1,180 bill at 18% GST has a net price of 1,180 ÷ 1.18 = ₹1,000, so the GST is ₹180." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why doesn't a 20% increase followed by a 20% decrease cancel out?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Because the two percentages apply to different bases. From 100: +20% gives 120, then −20% of 120 is 24, leaving 96 — not 100." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I copy the result with its formula?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. After any calculation, press 'Copy result as formula' to copy text like '20% of 500 = (20 ÷ 100) × 500 = 100' to your clipboard." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is PercentIQ free, and is my data private?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Completely free with unlimited usage — no signup, no paywall. All calculations run in your browser; history is stored only in your own browser's local storage." }
+    }
+  ]
+}
+</script>
+
+<footer class="no-print border-t border-indigo-100 bg-white">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2.5">
+      <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#4F46E5] text-[#F59E0B] font-black text-lg">%</span>
+      <span class="text-lg font-extrabold text-[#4F46E5]">Percent<span class="text-[#F59E0B]">IQ</span></span>
+    </div>
+    <p class="text-xs text-slate-500 text-center">Free percentage calculator — discounts, GST, tips, % change &amp; percentage points. Unlimited free usage, no signup.</p>
+    <nav class="text-sm font-semibold">
+      <a href="#top" class="px-3 py-2 text-indigo-900 hover:bg-indigo-50 rounded-lg">Home</a>
+      <a href="https://fixoraa.tech" class="px-3 py-2 text-indigo-900 hover:bg-indigo-50 rounded-lg">More Tools</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
